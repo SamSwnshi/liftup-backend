@@ -56,3 +56,7 @@ export const fetchBodyPart = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+export const fetchAccordingToId = async(req,res)=>{
+  
+}
