@@ -1,11 +1,12 @@
 import { Router } from "express";
-import { fetchData,fetchBodyPart ,fetchAccordingEquipment,targetList}  from "../controllers/exercise.controller.js"
+import { fetchData,fetchBodyPart ,fetchAccordingEquipment,targetList}  from "../controllers/exercise.controller.js";
+import { authMiddleware } from "../middleware/auth.middleware.js";
 
 const router = Router();
 
-router.get("/exercises",fetchData)
 router.get("/exercises/targetList",targetList)
-router.get("/exercises/bodyPart/:bodyPart",fetchBodyPart)
-router.get("/exercises/equipment/:equipment",fetchAccordingEquipment)
+router.get("/exercises",authMiddleware,fetchData)
+router.get("/exercises/bodyPart/:bodyPart",authMiddleware,fetchBodyPart)
+router.get("/exercises/equipment/:equipment",authMiddleware,fetchAccordingEquipment)
 
 export default router;
