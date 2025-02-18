@@ -27,7 +27,9 @@ export const fetchData = async (req, res) => {
       console.log("Data already exists in the database.");
     }
 
-    res.status(200).json({ message: "Data fetched successfully", data: response.data });
+    res
+      .status(200)
+      .json({ message: "Data fetched successfully", data: response.data });
   } catch (error) {
     console.error("Error fetching exercises:", error.message);
     res.status(500).json({ message: "Internal Server Error" });
@@ -52,11 +54,33 @@ export const fetchBodyPart = async (req, res) => {
     console.log(`Fetched exercises for body part: ${bodyPart}`);
     res.status(200).json(response.data);
   } catch (error) {
-    console.error(`Error fetching exercises for body part ${bodyPart}:`, error.message);
+    console.error(
+      `Error fetching exercises for body part ${bodyPart}:`,
+      error.message
+    );
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
-export const fetchAccordingToId = async(req,res)=>{
-  
-}
+export const fetchAccordingEquipment = async (req, res) => {
+  try {
+    const { equipment } = req.params;
+    const response = await axios.get(
+      `https://exercisedb.p.rapidapi.com/exercises/equipment/${equipment}`,
+      {
+        headers: {
+          "x-rapidapi-host": "exercisedb.p.rapidapi.com",
+          "x-rapidapi-key": process.env.RAPIDAPI_KEY,
+        },
+      }
+    );
+    console.log(`Fetched exercise according to EquipmentList: ${equipment}`)
+    res.status(200).json({data:response.data,message: "Fetched Data"})
+  } catch (error) {
+    console.error(
+      `Error fetching exercises for body part ${equipment}:`,
+      error.message
+    );
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
