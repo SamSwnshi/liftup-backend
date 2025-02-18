@@ -75,6 +75,24 @@ export const fetchAccordingEquipment = async (req, res) => {
       }
     );
     console.log(`Fetched exercise according to EquipmentList: ${equipment}`)
+    const exercise = response.data;
+
+    for(const equipList of exercise){
+      const existingExercise = await Exercise.findOne({
+        id: exercise.id
+      })
+      if(!existingExercise){
+        await Exercise.create({
+          id: equipList.id,
+          name: equipList.name,
+          bodyPart: equipList.bodyPart,
+          equipment: equipList.equipment,
+          gifUrl: equipList.gifUrl,
+          target: equipList.target,
+          instructions: equipList.instructions,
+        })
+      }
+    }
     res.status(200).json({data:response.data,message: "Fetched Data"})
   } catch (error) {
     console.error(
@@ -84,3 +102,19 @@ export const fetchAccordingEquipment = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+export const targetList = async (req,res) =>{
+  try {
+    const response = await axios.get("https://exercisedb.p.rapidapi.com/exercises/targetList",{
+      headers: {
+        "x-rapidapi-host": "exercisedb.p.rapidapi.com",
+        "x-rapidapi-key": process.env.RAPIDAPI_KEY,
+      },
+    })
+    res
+      .status(200)
+      .json({ message: "TargetList fetched successfully", data: response.data });
+  } catch (error) {
+    
+  }
+}
