@@ -7,6 +7,6 @@ const router = Router();
 router.get("/exercises/targetList",targetList)
 router.get("/exercises",authMiddleware,fetchData)
 router.get("/exercises/bodyPart/:bodyPart",authMiddleware,fetchBodyPart)
-router.get("/exercises/equipment/:equipment",authMiddleware,fetchAccordingEquipment)
+router.get("/exercises/equipment/:equipments",authMiddleware,fetchAccordingEquipment)
 
 export default router;

@@ -62,11 +62,13 @@ export const fetchBodyPart = async (req, res) => {
   }
 };
 
+// ✅ Fetch according to equipment and save exercises to MongoDB
 export const fetchAccordingEquipment = async (req, res) => {
   try {
-    const { equipment } = req.params;
+    const { equipments } = req.params;
+
     const response = await axios.get(
-      `https://exercisedb.p.rapidapi.com/exercises/equipment/${equipment}`,
+      `https://exercisedb.p.rapidapi.com/exercises/equipment/${equipments}`,
       {
         headers: {
           "x-rapidapi-host": "exercisedb.p.rapidapi.com",
@@ -74,14 +76,17 @@ export const fetchAccordingEquipment = async (req, res) => {
         },
       }
     );
-    console.log(`Fetched exercise according to EquipmentList: ${equipment}`)
-    const exercise = response.data;
 
-    for(const equipList of exercise){
+    console.log(`Fetched exercises according to equipment: ${equipments}`);
+
+    const exerciseData = response.data;
+
+    for (const equipList of exerciseData) {
       const existingExercise = await Exercise.findOne({
-        id: exercise.id
-      })
-      if(!existingExercise){
+        id: equipList.id, // corrected to equipList.id instead of exercise.id
+      });
+
+      if (!existingExercise) {
         await Exercise.create({
           id: equipList.id,
           name: equipList.name,
@@ -90,18 +95,21 @@ export const fetchAccordingEquipment = async (req, res) => {
           gifUrl: equipList.gifUrl,
           target: equipList.target,
           instructions: equipList.instructions,
-        })
+        });
       }
     }
-    res.status(200).json({data:response.data,message: "Fetched Data"})
+
+    res.status(200).json({ data: exerciseData, message: "Fetched Data" });
+
   } catch (error) {
     console.error(
-      `Error fetching exercises for body part ${equipment}:`,
+      `Error fetching exercises for equipment ${req.params.equipments}:`,
       error.message
     );
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
 
 export const targetList = async (req,res) =>{
   try {
