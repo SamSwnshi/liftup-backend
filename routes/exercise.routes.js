@@ -9,4 +9,4 @@ router.get("/exercises",authMiddleware,fetchData)
 router.get("/exercises/bodyPart/:bodyPart",authMiddleware,fetchBodyPart)
 router.get("/exercises/equipment/:equipments",authMiddleware,fetchAccordingEquipment)
 
-export default router;
+export default router
